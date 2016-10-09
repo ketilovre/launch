@@ -1,2 +1,3 @@
 lib/shim.js
 launch_x64*
+examples/Go/server
