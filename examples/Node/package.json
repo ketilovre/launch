@@ -1,0 +1,11 @@
+{
+  "name": "hello-launch-node",
+  "version": "1.0.0",
+  "description": "Hello world web server in Node.js",
+  "main": "app.js",
+  "scripts": {
+    "deploy": "launch",
+		"deploy:dev": "launch",
+		"deploy:prod": "launch -e prod"
+  }
+}

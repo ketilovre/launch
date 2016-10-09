@@ -1,0 +1,5 @@
+name: hello-launch-node
+description: Hello world web server in Node.js
+region: eu-central-1
+environment: dev
+port: 5000
