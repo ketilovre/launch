@@ -51,13 +51,14 @@ function sendRequest(event, context) {
 		res.on('end', function () {
 			context.succeed({
 				statusCode: res.statusCode,
-				headers: {},
+				headers: res.headers,
 				body: Buffer.concat(chunks).toString()
 			});
 		});
 	});
 
 	if (event.body) {
+		req.setHeader('Content-Length', event.body.length);
 		req.write(event.body);
 	}
 	req.end();
