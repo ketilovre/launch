@@ -1,5 +1,5 @@
 name: hello-launch-go
 description: Hello world web server in Go
 region: eu-central-1
-environment: dev
+default-environment: dev
 port: 5000

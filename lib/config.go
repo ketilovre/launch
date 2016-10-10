@@ -17,7 +17,7 @@ type Config struct {
 	Name        string
 	Description string
 	Region      string
-	Environment string
+	Environment string `yaml:"default-environment"`
 	Port        int
 	Variables   map[string]map[string]string
 }
