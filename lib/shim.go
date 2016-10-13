@@ -78,6 +78,12 @@ function boot(event) {
 			running = true;
 			console.error(String(data));
 		});
+
+		server.on('close', function(code) {
+			running = false;
+			waiting = false;
+			console.error('Server exited with code ' + code);
+		});
 	}
 }`
 
