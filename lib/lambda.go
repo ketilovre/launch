@@ -34,13 +34,33 @@ func CreateOrUpdateFunction(conf *Config) (*lambda.FunctionConfiguration, error)
 	return fn, createOrUpdateAlias(client, fn, conf)
 }
 
+func addEventPermission(eventArn *string, conf *Config) error {
+	client := lambda.New(conf.Session)
+
+	client.RemovePermission(&lambda.RemovePermissionInput{
+		FunctionName: aws.String(conf.Name),
+		StatementId: aws.String(conf.Environment),
+		Qualifier: aws.String(conf.Environment),
+	})
+
+	_, err := client.AddPermission(&lambda.AddPermissionInput{
+		FunctionName: aws.String(conf.Name),
+		Action: aws.String("lambda:InvokeFunction"),
+		Principal: aws.String("events.amazonaws.com"),
+		SourceArn: eventArn,
+		StatementId: aws.String(conf.Environment),
+		Qualifier: aws.String(conf.Environment),
+	})
+	return err
+}
+
 func getFunction(client *lambda.Lambda, conf *Config) (bool, error) {
 	_, err := client.GetFunction(&lambda.GetFunctionInput{
 		FunctionName: aws.String(conf.Name),
 	})
 
 	if err != nil {
-		if strings.Contains(err.Error(), "Function not found") {
+		if strings.Contains(err.Error(), "NotFound") {
 			return false, nil
 		}
 		return false, err
@@ -145,4 +165,10 @@ func createAlias(client *lambda.Lambda, fn *lambda.FunctionConfiguration, conf *
 		FunctionVersion: fn.Version,
 	})
 	return err
+}
+
+// lambdaRootARN returns the ARN of the lambda function without any trailing version number.
+func lambdaRootARN(arn string, conf *Config) string {
+	lastRelevantSegment := strings.LastIndex(arn, conf.Name)
+	return arn[:(lastRelevantSegment + len(conf.Name))]
 }

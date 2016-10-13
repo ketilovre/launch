@@ -253,13 +253,10 @@ func createIntegration(
 
 // API Gateway expects the function ARN in a separate format.
 func rewriteLambdaARN(arn string, conf *Config) string {
-	// The function ARN contains a version number at the end. We use aliases, so it needs to be removed.
-	lastRelevantSegment := strings.LastIndex(arn, conf.Name)
-	arn = arn[:(lastRelevantSegment + len(conf.Name))]
 	return fmt.Sprintf(
 		"arn:aws:apigateway:%v:lambda:path/2015-03-31/functions/%v:${stageVariables.environment}/invocations",
 		conf.Region,
-		arn,
+		lambdaRootARN(arn, conf),
 	)
 }
 

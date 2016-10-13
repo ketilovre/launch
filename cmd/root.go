@@ -119,6 +119,11 @@ func launchCommand(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
+	if err = launch.CreateOrUpdateFunctionWarmer(fn, conf); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
 	url, err := launch.GetInvokeUrl(conf)
 	if err != nil {
 		fmt.Println(err)
