@@ -39,17 +39,17 @@ func addEventPermission(eventArn *string, conf *Config) error {
 
 	client.RemovePermission(&lambda.RemovePermissionInput{
 		FunctionName: aws.String(conf.Name),
-		StatementId: aws.String(conf.Environment),
-		Qualifier: aws.String(conf.Environment),
+		StatementId:  aws.String(conf.Environment),
+		Qualifier:    aws.String(conf.Environment),
 	})
 
 	_, err := client.AddPermission(&lambda.AddPermissionInput{
 		FunctionName: aws.String(conf.Name),
-		Action: aws.String("lambda:InvokeFunction"),
-		Principal: aws.String("events.amazonaws.com"),
-		SourceArn: eventArn,
-		StatementId: aws.String(conf.Environment),
-		Qualifier: aws.String(conf.Environment),
+		Action:       aws.String("lambda:InvokeFunction"),
+		Principal:    aws.String("events.amazonaws.com"),
+		SourceArn:    eventArn,
+		StatementId:  aws.String(conf.Environment),
+		Qualifier:    aws.String(conf.Environment),
 	})
 	return err
 }

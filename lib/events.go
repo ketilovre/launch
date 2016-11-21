@@ -1,10 +1,10 @@
 package launch
 
 import (
-	"github.com/aws/aws-sdk-go/service/lambda"
-	cwe "github.com/aws/aws-sdk-go/service/cloudwatchevents"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
+	cwe "github.com/aws/aws-sdk-go/service/cloudwatchevents"
+	"github.com/aws/aws-sdk-go/service/lambda"
 )
 
 func CreateOrUpdateFunctionWarmer(fn *lambda.FunctionConfiguration, conf *Config) error {
@@ -30,7 +30,7 @@ func CreateOrUpdateFunctionWarmer(fn *lambda.FunctionConfiguration, conf *Config
 
 func createRule(client *cwe.CloudWatchEvents, conf *Config) (*string, error) {
 	rule, err := client.PutRule(&cwe.PutRuleInput{
-		Name: aws.String(ruleName(conf)),
+		Name:               aws.String(ruleName(conf)),
 		ScheduleExpression: aws.String("rate(1 minute)"),
 	})
 
@@ -45,8 +45,8 @@ func addTarget(client *cwe.CloudWatchEvents, fn *lambda.FunctionConfiguration, c
 		Rule: aws.String(ruleName(conf)),
 		Targets: []*cwe.Target{
 			{
-				Id: aws.String(conf.Environment),
-				Arn: aws.String(fmt.Sprintf("%v:%v", lambdaRootARN(*fn.FunctionArn, conf), conf.Environment)),
+				Id:    aws.String(conf.Environment),
+				Arn:   aws.String(fmt.Sprintf("%v:%v", lambdaRootARN(*fn.FunctionArn, conf), conf.Environment)),
 				Input: aws.String(input(conf)),
 			},
 		},
