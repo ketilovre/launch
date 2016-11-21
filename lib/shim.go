@@ -49,10 +49,15 @@ function sendRequest(event, context) {
 		});
 
 		res.on('end', function () {
+			var buf = Buffer.concat(chunks);
+			if (res.headers['transfer-encoding']) {
+				delete res.headers['transfer-encoding'];
+				res.headers['content-length'] = buf.byteLength;
+			}
 			context.succeed({
 				statusCode: res.statusCode,
 				headers: res.headers,
-				body: Buffer.concat(chunks).toString()
+				body: buf.toString()
 			});
 		});
 	});
