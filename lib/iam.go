@@ -45,7 +45,8 @@ func getRole(client *iam.IAM, roleName string) (*iam.Role, error) {
 	role, err := client.GetRole(&iam.GetRoleInput{
 		RoleName: aws.String(roleName),
 	})
-	if err != nil && !strings.Contains(err.Error(), "cannot be found") {
+
+	if err != nil && !strings.Contains(err.Error(), "NoSuchEntity") {
 		return nil, err
 	}
 
